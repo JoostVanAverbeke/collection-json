@@ -15,6 +15,8 @@ call ```to_json``` on.
 
 ```ruby
 collection = CollectionJSON.generate_for('/friends/') do |builder|
+  builder.set_version '1.1'
+  builder.set_page_info(current_page: 1, total_items: 10, page_size: 2)
   builder.add_link '/friends/rss', 'feed'
   user.friends.each do |friend|
     builder.add_item("/friends/#{friend.id}") do |item|
@@ -43,9 +45,9 @@ Output:
 ```javascript
 { "collection" :
   {
-    "version" : "1.0",
     "href" : "http://example.org/friends/",
-    
+    "version" : "1.1",
+    "page_info" : { "current_page" : 1, "total_items" : 10, "page_size" : 2},    
     "links" : [
       {"rel" : "feed", "href" : "http://example.org/friends/rss"}
     ],
