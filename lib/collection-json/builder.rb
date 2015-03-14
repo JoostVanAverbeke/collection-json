@@ -12,6 +12,10 @@ module CollectionJSON
       @collection.version version
     end
 
+    def set_page_info(params = {})
+      @collection.page_info params
+    end
+
     def add_link(href, rel, params = {})
       params.merge!({'rel' => rel, 'href' => href})
       @collection.links << Link.from_hash(params)

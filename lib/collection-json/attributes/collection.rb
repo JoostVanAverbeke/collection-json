@@ -4,12 +4,14 @@ require_relative 'item'
 require_relative 'query'
 require_relative 'error'
 require_relative 'template'
+require_relative 'page_info'
 
 module CollectionJSON
   class Collection < Attribute
     root_node :collection
     attribute :href, transform: URI
     attribute :version
+    attribute :page_info, transform: lambda { |page_info| PageInfo.from_hash(page_info) }
     attribute :links,
               transform:  lambda { |links| links.each.map { |l| Link.from_hash(l) }},
               default:    [],

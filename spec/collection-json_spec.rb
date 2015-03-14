@@ -26,6 +26,7 @@ describe CollectionJSON do
     it 'should generate an object with the attributes we expect' do
       response = CollectionJSON.generate_for('/friends/') do |builder|
         builder.set_version '1.1'
+        builder.set_page_info(current_page: 1, total_items: 10, page_size: 2)
         builder.add_link '/friends/rss', 'feed'
         @friends.each do |friend|
           builder.add_item("/friends/#{friend['id']}") do |item|
@@ -47,6 +48,9 @@ describe CollectionJSON do
       end
 
       expect(response.version).to eq('1.1')
+      expect(response.page_info.current_page).to eq(1)
+      expect(response.page_info.total_items).to eq(10)
+      expect(response.page_info.page_size).to eq(2)
       expect(response.href).to eq('/friends/')
       expect(response.links.first.href).to eq("/friends/rss")
       expect(response.link('feed').href).to eq("/friends/rss")
@@ -67,7 +71,10 @@ describe CollectionJSON do
   describe :parse do
     before(:all) do
       json = '{"collection": {
+
         "href": "http://www.example.org/friends",
+        "version": "1.1",
+        "page_info": { "current_page": 1, "total_items": 10, "page_size": 2},
         "links": [
           {"rel": "feed", "href": "http://www.example.org/friends.rss"}
         ],
@@ -89,6 +96,17 @@ describe CollectionJSON do
 
     it 'should have correct href' do
       expect(@collection.href).to eq("http://www.example.org/friends")
+    end
+
+    it 'should have the correct version' do
+      expect(@collection.version).to eq("1.1")
+    end
+
+    it 'should have the correct page info' do
+      expect(@collection.page_info).not_to be_nil
+      expect(@collection.page_info.current_page).to eq(1)
+      expect(@collection.page_info.total_items).to eq(10)
+      expect(@collection.page_info.page_size).to eq(2)
     end
 
     it 'should handle the nested attributes' do
