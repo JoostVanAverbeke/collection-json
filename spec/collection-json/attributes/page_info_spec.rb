@@ -6,6 +6,7 @@ describe CollectionJSON::PageInfo do
   let(:page_info) { CollectionJSON::PageInfo.from_hash({
                              current_page: 1,
                              total_items: 10,
+                             total_records: 1000,
                              page_size: 2
                      })
   }
@@ -19,6 +20,10 @@ describe CollectionJSON::PageInfo do
 
   it 'has an attribute total_items' do
     expect(page_info.total_items).to eq(10)
+  end
+
+  it 'has an attribute total_records' do
+    expect(page_info.total_records).to eq(1000)
   end
 
   it 'has an attribute page_size' do
